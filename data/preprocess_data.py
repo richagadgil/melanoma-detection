@@ -1,5 +1,7 @@
 import csv 
+import os
 import random
+import shutil
 
 mel_set = {}
 nv_set = {}
@@ -12,6 +14,9 @@ scc_set = {}
 unk_set = {}
 
 cats = ["MEL", "NV", "BCC", "AK", "BKL", "DF", "VASC", "SCC", "UNK"]
+
+sets_per_class = 1000
+gen_data = True
 
 def check_label(input_data):
     for i in range(len(input_data)):
@@ -47,6 +52,7 @@ def add_to_set(set_data, label):
         unk_set[set_data] = "UNK"
 
 def split_data(dataset, trainset, testset, validset):
+    
     set_len = len(dataset)
     test_len = int(set_len * 0.1)
     train_len = set_len - (test_len * 2)
@@ -81,6 +87,7 @@ def main():
         csv_reader = csv.reader(read_csv)
         for row in csv_reader:
             stats.append(row)
+        stats = stats[1:]
     random.shuffle(stats)
 
     for row in stats:
@@ -124,12 +131,13 @@ def main():
 
         for data in trainset.keys():
             writer.writerow(["TRAIN" ,"gs://disease_train/disease_train/" + data, trainset[data]])
-
+            shutil.copyfile(os.getcwd() + "\\ISIC_2019_Training_Input\\ISIC_2019_Training_Input\\" + data + ".jpg", os.getcwd() + "\\dataset\\" + data + ".jpg")
         for data in testset.keys():
             writer.writerow(["TEST","gs://disease_train/disease_train/" + data, testset[data]])
-
+            shutil.copyfile(os.getcwd() + "\\ISIC_2019_Training_Input\\ISIC_2019_Training_Input\\" + data + ".jpg" , os.getcwd() + "\\dataset\\" + data + ".jpg")
         for data in validset.keys():
-            writer.writerow(["VALID" ,"gs://disease_train/disease_train/" + data, validset[data]])
+            writer.writerow(["VALIDATE" ,"gs://disease_train/disease_train/" + data, validset[data]])
+            shutil.copyfile(os.getcwd() + "\\ISIC_2019_Training_Input\\ISIC_2019_Training_Input\\" + data + ".jpg" , os.getcwd() + "\\dataset\\" + data + ".jpg")
 
 if __name__ == '__main__':
     main()
