@@ -3,6 +3,9 @@ import json
 import requests
 
 def read_output(latitude, longitude, description):
+    with open("api_key.json") as in_json:
+        key = json.load(in_json)["key"]
+    
     place_ids_pairs = {}
     textsearch = {}
 
@@ -87,10 +90,6 @@ def sentiment_analysis(sentence):
     return output_score
 
 if __name__ == "__main__":
-    with open("api_key.json") as in_json:
-        key = json.load(in_json)["key"]
-
-    print(key)
 
     sentence = "oh god am I going to die?"
     sentence1 = "I am so terrified. What am I going to do?"
