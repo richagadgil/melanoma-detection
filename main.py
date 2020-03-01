@@ -23,10 +23,14 @@ model_id = "ICN5748246790012928"
 
 @app.route("/get-doctors", methods=["POST"])
 def read_output():
+    print(request)
     data = request.get_json()
-    latitude = str(data["latitude"])
-    longitude = str(data["longitude"])
-    description = data["description"]
+    print(data)
+    print(type(data))
+    print(data.get("latitude"))
+    latitude = str(data.get("latitude"))
+    longitude = str(data.get("longitude"))
+    description = data.get("description")
     with open("api_key.json") as in_json:
         key = json.load(in_json)["key"]
 
@@ -34,7 +38,7 @@ def read_output():
     textsearch = {}
 
     A = Afinn()
-    output_score = A.score(sentence)
+    output_score = A.score(description)
 
     if output_score >= 0:
         query = "dermatologist"
@@ -107,7 +111,7 @@ def read_output():
 
         output.append(out_dict)
 
-    return json.dump(output)
+    return json.dumps(output)
 
 @app.route("/")
 def hello():
