@@ -1,0 +1,4 @@
+slohacks.json
+venv/*
+.vscode/*
+.DS_Store
