@@ -21,6 +21,7 @@ SUCCESS = 200
 project_id = 414357853263
 model_id = "ICN5748246790012928"
 
+@app.route("/get-doctors", methods=["POST"])
 def read_output():
     data = request.get_json()
     latitude = str(data["latitude"])
@@ -115,6 +116,7 @@ def hello():
 # 'content' is base-64-encoded image data.
 @app.route("/submit-image", methods=["POST"])
 def get_prediction():
+    print("PREDICTION:CALL")
     if "image" not in request.files:
         return "Adhere to format - image: Blob", BAD_REQUEST
     image = request.files["image"].read()
@@ -144,5 +146,6 @@ if __name__ == "__main__":
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(
         os.getcwd(), "slohacks.json"
     )
-    app.run(debug=True)
-    #app.run(host='0.0.0.0', port=8080, debug=True)
+    #app.run(debug=True)
+    print("MAIN END:")
+    app.run(host='0.0.0.0', port=8080, debug=True)
