@@ -23,16 +23,11 @@ def get_prediction():
     if "image" not in request.files:
         return "Adhere to format - image: Blob", BAD_REQUEST
     image = request.files["image"].read()
-    # image_b64 = base64.b64encode(image.read())
-    print("\n TYPE:", type(image), "\n\n")
     prediction_client = automl_v1beta1.PredictionServiceClient()
     name = "projects/{}/locations/us-central1/models/{}".format(project_id, model_id)
     payload = {"image": {"image_bytes": image}}
     params = {}
     prediction = prediction_client.predict(name, payload, params)
-    print()
-    print("PAYLOAD", prediction.payload)
-    print()
     response = {}
     disease_mappings = {
         "MEL": "Melanoma",
@@ -46,7 +41,7 @@ def get_prediction():
     }
     for res in prediction.payload:
         disease = disease_mappings[res.display_name]
-        response[disease] = res.classification.score
+        response[disease] = int(res.classification.score * 100)
 
     return response, SUCCESS
 
