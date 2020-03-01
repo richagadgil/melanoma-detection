@@ -1,5 +1,6 @@
 afinn==0.1
 flask==1.1.1
+flask-cors==3.0.8
 google-cloud==0.34.0
 google-cloud-automl==0.10.0
 requests==2.22.0 
