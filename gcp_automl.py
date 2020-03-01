@@ -20,15 +20,24 @@ model_id = "ICN5748246790012928"
 # 'content' is base-64-encoded image data.
 @app.route("/submit-image", methods=["POST"])
 def get_prediction():
-    image = request.files["image"]
-    image_b64 = base64.b64encode(image.read())
+    image = request.files["image"].read()
+    # image_b64 = base64.b64encode(image.read())
+    print("\n TYPE:", type(image), "\n\n")
     prediction_client = automl_v1beta1.PredictionServiceClient()
 
     name = "projects/{}/locations/us-central1/models/{}".format(project_id, model_id)
-    payload = {"image": {"image_bytes": image_b64}}
+    payload = {"image": {"image_bytes": image}}
     params = {}
-    response = prediction_client.predict(name, payload, params)
-    return response  # waits till request is returned
+    prediction = prediction_client.predict(name, payload, params)
+    print()
+    print("PAYLOAD", prediction.payload)
+    print()
+    response = {
+        "disease": prediction.payload[0].display_name,
+        "probability": prediction.payload[0].classification.score,
+    }
+
+    return response, SUCCESS
 
 
 if __name__ == "__main__":
